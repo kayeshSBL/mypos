@@ -48,10 +48,6 @@ dependencies {
     implementation libs.glasssdk
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
-    implementation libs.stripe.terminal.android
-    implementation libs.stripe.android
-
-    implementation libs.stripeterminal
 
 
 

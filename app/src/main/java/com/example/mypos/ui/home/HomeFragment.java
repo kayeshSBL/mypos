@@ -26,17 +26,11 @@ import com.mypos.glasssdk.exceptions.FunctionalityNotSupportedException;
 import com.mypos.slavesdk.ConnectionType;
 import com.mypos.slavesdk.Currency;
 import com.mypos.slavesdk.POSHandler;
-import com.stripe.android.model.PaymentIntent;
 
 import java.io.OutputStream;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.stripe.stripeterminal.Terminal;
-import com.stripe.stripeterminal.external.callable.ConnectionTokenCallback;
-import com.stripe.stripeterminal.external.callable.TerminalListener;
-import com.stripe.stripeterminal.external.models.ConnectionStatus;
-import com.stripe.stripeterminal.external.models.TerminalException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

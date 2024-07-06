@@ -21,9 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mypos.databinding.ActivityMainBinding;
 import com.mypos.slavesdk.Currency;
 import com.mypos.slavesdk.POSHandler;
-import com.stripe.stripeterminal.Terminal;
-import com.stripe.stripeterminal.external.callable.ConnectionTokenCallback;
-import com.stripe.stripeterminal.external.models.TerminalException;
 
 import org.jetbrains.annotations.NotNull;
 

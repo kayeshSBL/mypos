@@ -20,12 +20,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mypos.R;
 import com.example.mypos.databinding.FragmentHomeBinding;
 import com.mypos.glasssdk.MyPOSAPI;
+import com.mypos.glasssdk.MyPOSPayment;
 import com.mypos.glasssdk.MyPOSVoid;
 import com.mypos.glasssdk.TransactionProcessingResult;
 import com.mypos.glasssdk.exceptions.FunctionalityNotSupportedException;
-import com.mypos.slavesdk.ConnectionType;
-import com.mypos.slavesdk.Currency;
-import com.mypos.slavesdk.POSHandler;
+import com.mypos.glasssdk.Currency;
+import com.mypos.smartsdk.MyPOSUtil;
+import com.mypos.smartsdk.ReferenceType;
 
 import java.io.OutputStream;
 import java.util.Objects;
@@ -40,7 +41,7 @@ import java.util.Scanner;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private Button submitButton, submitButton2;
+    private Button submitButton;
     private EditText amountEditText;
     private static final int VOID_REQUEST_CODE = 4;
     private static final int REQUEST_CODE_MAKE_PAYMENT = 4;
@@ -49,7 +50,7 @@ public class HomeFragment extends Fragment {
     private Button createPaymentIntentButton;
 
 
-    private POSHandler mPOSHandler;
+   // private POSHandler mPOSHandler;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -69,16 +70,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        POSHandler.setCurrency(Currency.EUR);
-        POSHandler.setApplicationContext(getContext());
-        POSHandler.setDefaultReceiptConfig(4);
-        POSHandler.setConnectionType(ConnectionType.BLUETOOTH); // Use ConnectionType.USB for usb connection type
-        mPOSHandler = POSHandler.getInstance();
 
 
         amountEditText = requireView().findViewById(R.id.amountEditText);
         submitButton =  requireView().findViewById(R.id.submitButton);
-        submitButton2 =  requireView().findViewById(R.id.submitButton2);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,24 +82,8 @@ public class HomeFragment extends Fragment {
                 if (!amountText.isEmpty()) {
                     double amount = Double.parseDouble(amountText);
                     // Perform your business logic here. For now, just display a Toast.
-                    //  directPayment(amount);
-                    startVoid(String.valueOf(amount));
-                    Toast.makeText(getContext(), "Entered amount: " + amount, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        submitButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String amountText = amountEditText.getText().toString();
-                if (!amountText.isEmpty()) {
-                    double amount = Double.parseDouble(amountText);
-                    // Perform your business logic here. For now, just display a Toast.
-                    //  directPayment(amount);
-                    paymentViaActivity(String.valueOf(amount));
+                      directPayment(amount);
+                   // startVoid(String.valueOf(amount));
                     Toast.makeText(getContext(), "Entered amount: " + amount, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_SHORT).show();
@@ -116,17 +95,44 @@ public class HomeFragment extends Fragment {
 
     // Build the void transaction
 
-    private void paymentViaActivity(String amount){
-        Log.d("Amount====>",""+amount);
-        mPOSHandler.openPaymentActivity(
-                getActivity() ,
-                REQUEST_CODE_MAKE_PAYMENT ,
-                amount ,
-                UUID.randomUUID().toString()
-        );
-    }
 
 
+  private void directPayment(double amount){
+      MyPOSPayment payment = MyPOSPayment.builder()
+              // Mandatory parameters
+              .productAmount(amount)
+              .currency(Currency.EUR)
+              // Foreign transaction ID. Maximum length: 128 characters
+              .foreignTransactionId(UUID.randomUUID().toString())
+              // Optional parameters
+              // Enable tipping mode
+              .tippingModeEnabled(true)
+              .tipAmount(1.55)
+              // Operator code. Maximum length: 4 characters
+              .operatorCode("1234")
+              // Reference number. Maximum length: 50 alpha numeric characters
+              .reference("asd123asd", ReferenceType.REFERENCE_NUMBER)
+              // Enable fixed pinpad keyboard
+              //.fixedPinpad(true)
+              // Enable mastercard and visa branding video
+              .mastercardSonicBranding(true)
+              .visaSensoryBranding(true)
+              // Set print receipt mode
+              .printMerchantReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF
+              .printCustomerReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF, RECEIPT_AFTER_CONFIRMATION, RECEIPT_E_RECEIPT
+              //set email or phone e-receipt receiver, works with customer receipt configuration RECEIPT_E_RECEIPT or RECEIPT_AFTER_CONFIRMATION
+              //.ereceiptreceiver("examplename@example.com")
+              .build();
+
+// If you want to initiate a moto transaction:
+      //payment.setMotoTransaction(true);
+
+// Or you want to initiate a giftcard transaction:
+     // payment.setGiftCardTransaction(true);
+
+// Start the transaction
+      MyPOSAPI.openPaymentActivity(getActivity(), payment, 1);
+  }
 
     private void startVoid(String amount) {
         try {

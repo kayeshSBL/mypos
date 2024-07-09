@@ -34,7 +34,7 @@
     </application>
 
     <queries>
-        <package android:name="com.mypos.top" />
+        <package android:name="com.mypos" />
     </queries>
 
 </manifest>

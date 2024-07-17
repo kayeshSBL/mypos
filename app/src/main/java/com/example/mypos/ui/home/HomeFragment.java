@@ -19,14 +19,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mypos.R;
 import com.example.mypos.databinding.FragmentHomeBinding;
-import com.mypos.glasssdk.MyPOSAPI;
-import com.mypos.glasssdk.MyPOSPayment;
-import com.mypos.glasssdk.MyPOSVoid;
-import com.mypos.glasssdk.TransactionProcessingResult;
-import com.mypos.glasssdk.exceptions.FunctionalityNotSupportedException;
-import com.mypos.glasssdk.Currency;
+import com.mypos.smartsdk.Currency;
+import com.mypos.smartsdk.MyPOSAPI;
+import com.mypos.smartsdk.MyPOSPayment;
 import com.mypos.smartsdk.MyPOSUtil;
+import com.mypos.smartsdk.MyPOSVoid;
 import com.mypos.smartsdk.ReferenceType;
+import com.mypos.smartsdk.TransactionProcessingResult;
+import com.mypos.smartsdk.exceptions.FunctionalityNotSupportedException;
 
 import java.io.OutputStream;
 import java.util.Objects;
@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment {
               .tippingModeEnabled(true)
               .tipAmount(1.55)
               // Operator code. Maximum length: 4 characters
-              .operatorCode("1234")
+              //.operatorCode("1234")
               // Reference number. Maximum length: 50 alpha numeric characters
               .reference("asd123asd", ReferenceType.REFERENCE_NUMBER)
               // Enable fixed pinpad keyboard
@@ -118,8 +118,8 @@ public class HomeFragment extends Fragment {
               .mastercardSonicBranding(true)
               .visaSensoryBranding(true)
               // Set print receipt mode
-              .printMerchantReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF
-              .printCustomerReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF, RECEIPT_AFTER_CONFIRMATION, RECEIPT_E_RECEIPT
+              //.printMerchantReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF
+             // .printCustomerReceipt(MyPOSUtil.RECEIPT_ON) // possible options RECEIPT_ON, RECEIPT_OFF, RECEIPT_AFTER_CONFIRMATION, RECEIPT_E_RECEIPT
               //set email or phone e-receipt receiver, works with customer receipt configuration RECEIPT_E_RECEIPT or RECEIPT_AFTER_CONFIRMATION
               //.ereceiptreceiver("examplename@example.com")
               .build();
